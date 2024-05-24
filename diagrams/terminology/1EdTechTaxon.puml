@@ -1,8 +1,7 @@
-/'
-# Terminology in next generation credentials
+/'Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 12:34:14
+Last modified: 2024/05/24 16:43:10
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -10,36 +9,54 @@ For citations and other documentation, please see
 '/
 @startuml 1EdTechTaxon
 
-
-!include W3CTaxon.puml!0
 !include style.puml
+
+!includesub ./W3CTaxon-VC.puml!Core
+!includesub ./W3CTaxon-VC.puml!VC
+!include ./fragmentSchemaLD.puml
 
 Title: NGC from 1EdTech Consortium
 
 !startsub Core
-class "Comprehensive Learner Record (CLR)" <<taxStandard>>
-"Comprehensive Learner Record (CLR)" --|> "Verifiable credentials (W3C)"
-class "Open Badges" <<taxStandard>>
-"Open Badges" --|> "Verifiable credentials (W3C)"
 class "1EdTech Consortium" <<taxOrg>>
-"1EdTech Consortium" ..> "Comprehensive Learner Record (CLR)": maintains
+
+class "Comprehensive\nLearner Record (CLR)" <<taxStandard>>{
+    [[https://www.1edtech.org/standards/clr CLR at 1edtech]]
+}
+"Comprehensive\nLearner Record (CLR)" --|> "Verifiable credentials (W3C)"
+
+class "Open Badges" <<taxStandard>>{
+    [[https://www.1edtech.org/standards/open-badges OB at 1edtech]]
+}
+"Open Badges" --|> "Verifiable credentials (W3C)"
+"Open Badges" --|> "Schema org"
+
+"1EdTech Consortium" ..> "Comprehensive\nLearner Record (CLR)": maintains
 "1EdTech Consortium" ..> "Open Badges": maintains
+
 !endsub
 
-' The microcredential standard seems more esoteric
+' The Microcredential\nstandard seems more esoteric
+class "Badge Connect® API" <<taxStandard>> {
+    see [[https://www.imsglobal.org/spec/ob/v2p1/ Open Badges 2.1]]
+}
+"Badge Connect® API" --* "Open Badges" : defined in
 
-class "TrustEd Microcredential Framework" <<taxStandard>>
-"TrustEd Microcredential Framework" --|> "Open Badges"
-class "TrustEd Microcredential Knowledge" <<taxStandard>>
-class "TrustEd Microcredential Application" <<taxStandard>>
-"TrustEd Microcredential Knowledge" --* "TrustEd Microcredential Framework" : defined in
-"TrustEd Microcredential Application" --* "TrustEd Microcredential Framework" : defined in
+class "TrustEd\nMicrocredential\nFramework" <<taxStandard>>
+"TrustEd\nMicrocredential\nFramework" --|> "Open Badges"
+class "TrustEd\nMicrocredential\nKnowledge" <<taxStandard>>
+class "TrustEd\nMicrocredential\nApplication" <<taxStandard>>
+"TrustEd\nMicrocredential\nKnowledge" --* "TrustEd\nMicrocredential\nFramework" : defined in
+"TrustEd\nMicrocredential\nApplication" --* "TrustEd\nMicrocredential\nFramework" : defined in
 
-class "TrustEd Microcredential Coalition" <<taxOrg>>
-"1EdTech Consortium"  ..> "TrustEd Microcredential Coalition": coordinates
-"TrustEd Microcredential Coalition"  ..> "TrustEd Microcredential Framework" : maintains
+class "TrustEd\nMicrocredential\nCoalition" <<taxOrg>> {
+    [[https://www.1edtech.org/program/tmc TMC at 1edtech]]
+}
+"1EdTech Consortium"  ..> "TrustEd\nMicrocredential\nCoalition": coordinates
+"TrustEd\nMicrocredential\nCoalition"  ..> "TrustEd\nMicrocredential\nFramework" : maintains
 !include ./Version.puml
-note as source
+
+note top of "1EdTech Consortium" 
     R. Coyle, “Clarifying Credentials: What’s the Difference Between CLRs, LERs and Wallets? 
     | 1EdTech.” Accessed: May 22, 2024. [Online]. Available: 
     [[https://www.1edtech.org/blog/clarifying-credentials-whats-the-difference-between-clrs-lers-and-wallets]]

@@ -1,14 +1,17 @@
 # Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 12:40:55
+Last modified: 2024/05/24 16:26:52
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
 
 @startuml sprawlingTaxonomy
     !include ./terminology/style.puml
-    !include ./terminology/W3CTaxon.puml
+    !includesub ./terminology/W3CTaxon-VC.puml!Core
+    !includesub ./terminology/W3CTaxon-VC.puml!EOCred
+    !includesub ./terminology/W3CTaxon-VC.puml!VC
+    !includesub ./terminology/W3CTaxon-VC.puml!Cred
     !includesub ./terminology/1EdTechTaxon.puml!Core
     'Simplify by not showing class details 
     hide members
@@ -16,5 +19,5 @@ For citations and other documentation, please see
 
     Title: All the things
 
-
+    !include ./terminology/Version.puml
 @enduml

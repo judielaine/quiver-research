@@ -1,0 +1,115 @@
+/'
+# Terminology in next generation credentials
+
+Created: 2024/05/24 08:16:45
+Last modified: 2024/05/24 16:44:20
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml W3CTaxonVC
+    !include style.puml
+
+    Title: W3C and the VC community
+
+    !startsub Core
+        !include ./fragmentW3C.puml
+    !endsub 
+
+    !startsub VC
+        class "Verifiable credentials WG" <<taxOrg>>{
+            [[https://www.w3.org/groups/wg/vc/ Working group]]
+        }
+
+        "W3C" ..> "Verifiable credentials WG" : coordinates
+        
+        class "Verifiable credentials (W3C)" <<taxStandard>> {
+            [[https://www.w3.org/TR/vc-data-model/ VC at W3C]]
+        }
+
+        "Verifiable credentials WG" ..> "Verifiable credentials (W3C)": maintains
+
+        
+    !endsub
+
+    !startsub Cred
+
+
+
+        ' Credentials CG
+            class "Credentials CG" <<taxOrg>>{
+                [[https://www.w3.org/groups/cg/credentials/ Community group]]
+            }
+            "W3C" ..> "Credentials CG" : coordinates
+            class "Verifiable Credentials API" <<taxStandard>>{
+                [[https://w3c-ccg.github.io/vc-api/ VCAPI at W3C]]
+            }
+            "Credentials CG" ..> "Verifiable Credentials API": maintains
+            "Verifiable credentials (W3C)" <|-- "Verifiable Credentials API"
+            
+            class "Verifiable Issuers and Verifiers" <<taxStandard>> {
+                [[https://w3c-ccg.github.io/verifiable-issuers-verifiers/ VI&V at W3C]]
+            }
+            "Credentials CG" ..> "Verifiable Issuers and Verifiers" : maintains
+            "Verifiable credentials (W3C)" <|-- "Verifiable Issuers and Verifiers"
+
+        ' Credentials CG has VC for Education Task Force
+            class "VC for Education Task Force" <<taxOrg>> {
+                }
+            "Credentials CG"  ..> "VC for Education Task Force" : coordinates
+
+            class "VC EDU Use Cases" <<taxWork>>{
+                    [[https://w3c-ccg.github.io/vc-ed-use-cases/ Use cases]]
+            }
+            "VC for Education Task Force" ..> "VC EDU Use Cases": maintains
+            class "VC EDU Models" <<taxWork>>{
+                    [[https://w3c-ccg.github.io/vc-ed-models/ Models]]
+            }
+            "VC for Education Task Force" ..> "VC EDU Models": maintains
+        
+    !endsub
+    'other Credentials work not needed in overview
+
+        !include ./FragmentMDL.puml
+        !include ./fragmentSchemaLD.puml
+        class "Verifiable Driver's\nLicense Vocabulary" <<taxWork>> {
+            Linked Data vocabulary for
+            asserting ISO18013-compatible
+            DLs * [[https://github.com/w3c-ccg/vdl-vocab DLV at GitHub]]
+        }
+        "Credentials CG" ..> "Verifiable Driver's\nLicense Vocabulary": maintains
+        "Verifiable Driver's\nLicense Vocabulary" ..> "Schema org" : uses
+        "Verifiable Driver's\nLicense Vocabulary" ..> "ISO/IEC 18013-5:2021 mDL" : uses
+
+        class "Citizenship Vocabulary" <<taxStandard>> {
+            [[https://w3c-ccg.github.io/citizenship-vocab/ CV at W3C]]
+        }
+        "Credentials CG" ..> "Citizenship Vocabulary": maintains
+        "Citizenship Vocabulary" ..> "Schema org" : uses
+
+
+    !startsub EOCred
+        !include ./fragmentSchemaLD.puml
+        class "EOCred-schema CG" <<taxOrg>> {
+            "Educational and Occupational\nCredentials in schema org"
+            _Not clear if still active_
+            [[https://www.w3.org/groups/cg/eocred-schema/ Community group]]
+        }
+        "W3C" ..> "EOCred-schema CG" : coordinates
+        class "Educational Occupationa Credential" <<taxStandard>> {
+            [[https://schema.org/EducationalOccupationalCredential EOC at schema.org]]
+        }
+        "EOCred-schema CG" ..> "Educational Occupationa Credential" : developed
+        "Educational Occupationa Credential" --|> "Schema org"
+    !endsub
+        
+    !startsub DID
+    '#TODO Review work of https://www.w3.org/community/applied-did-and-vc/
+    'Decentralized Identifier and Verifiable Credentials Applications Community Group 
+    !endsub
+
+
+    !include ./Version.puml
+@enduml
+
+

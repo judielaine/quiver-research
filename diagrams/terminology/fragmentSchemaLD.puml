@@ -1,0 +1,19 @@
+/'Terminology in next generation credentials
+
+Created: 2024/05/24 15:53:16
+Last modified: 2024/05/24 16:22:03
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml schema
+    !include ./fragmentW3C.puml
+    class "Linked Data" <<taxStandard>>{
+        [[https://www.w3.org/TR/ldp/ LD at W3C]]
+    }
+    "W3C" ..> "Linked Data" : maintains
+    class "Schema org" <<taxStandard>> {
+        [[https://schema.org/docs/schemas.html schemas]]
+    }
+    "Schema org" ..> "Linked Data": uses
+@enduml

@@ -1,0 +1,11 @@
+/'Terminology in next generation credentials
+
+Created: 2024/05/24 15:54:29
+Last modified: 2024/05/24 15:57:19
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml w3c
+class "W3C" <<taxOrg>>
+@enduml

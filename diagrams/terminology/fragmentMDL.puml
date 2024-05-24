@@ -1,0 +1,15 @@
+/'Terminology in next generation credentials
+
+Created: 2024/05/24 16:02:21
+Last modified: 2024/05/24 16:12:08
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml mDL
+    class "ISO org" <<taxOrg>>
+    class "ISO/IEC 18013-5:2021 mDL" <<taxStandard>>{
+        [[https://www.iso.org/standard/69084.html mDL at ISO]]
+    }
+    "ISO org" --> "ISO/IEC 18013-5:2021 mDL" : maintains
+@enduml
