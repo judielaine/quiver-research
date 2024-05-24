@@ -1,0 +1,20 @@
+# Terminology in next generation credentials
+
+Created: 2024/05/24 08:16:45
+Last modified: 2024/05/24 11:43:29
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+
+@startuml
+    !include ./terminology/style.puml
+    !include ./terminology/W3CTaxon.puml!0
+    !includesub ./terminology/1EdTechTaxon.puml!Core
+    'Simplify by not showing class details 
+    hide members
+    hide circle
+
+    Title: All the things
+
+
+@enduml

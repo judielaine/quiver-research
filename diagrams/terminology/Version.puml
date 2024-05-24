@@ -1,0 +1,7 @@
+@startuml version
+note as version
+    Next generation credentials
+    Last modified: 2024/05/24 12:33:36
+    [[https://www.zotero.org/groups/5541646/nextgencredentials{Zotero} see documentation]]
+end note
+@enduml

@@ -1,0 +1,28 @@
+!include ../color/color.puml
+hide empty members
+
+!define taxStandard (S,pGreen) Standard
+!define taxOrg (O,pOrange) Organization
+
+skinparam{
+    'https://plantuml.com/skinparam
+    'https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
+ 
+    ArrowColor pBlack
+    ArrowFontColor pBlack
+
+    backgroundColor transparent
+
+    ClassBackgroundColor pPaleGreen
+    classFontColor pBlack
+    'classFontSize 10
+    'classFontName Aapex
+    
+    HyperlinkColor pRed
+
+    NoteBackgroundColor pYellow
+    NoteBorderColor pOrange
+    NoteFontColor pBlack
+
+    TitleFontColor pBlack
+}
