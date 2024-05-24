@@ -1,3 +1,4 @@
+@startuml style
 !include ../color/color.puml
 hide empty members
 
@@ -26,3 +27,4 @@ skinparam{
 
     TitleFontColor pBlack
 }
+@enduml

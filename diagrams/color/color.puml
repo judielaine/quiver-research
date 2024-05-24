@@ -1,11 +1,12 @@
-' https://color.adobe.com/create/color-wheel adobe@gcc
-' Plantuml base
-!define pBlue  #5588D9
-!define pBlack #0A2A61
-!define pPaleGreen #ECF6F4
-!define pGreen #55D9D6
-!define pDKGreen #075C5B
-!define pOrange #D99B55
-!define pYellow #F5EDA8
-!define pRed #F5665D
-
+@startuml colors
+    ' https://color.adobe.com/create/color-wheel adobe@gcc
+    ' AdobeColor-Plantuml base
+    !define pBlue  #5588D9
+    !define pBlack #0A2A61
+    !define pPaleGreen #ECF6F4
+    !define pGreen #55D9D6
+    !define pDKGreen #075C5B
+    !define pOrange #D99B55
+    !define pYellow #F5EDA8
+    !define pRed #F5665D
+@enduml
