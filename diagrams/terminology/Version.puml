@@ -1,7 +1,8 @@
 @startuml version
 note as version
     Next generation credentials
-    Last modified: 2024/05/24 14:57:23
-    [[https://www.zotero.org/groups/5541646/nextgencredentials{Zotero} see documentation]]
+    Last modified: 2024/05/24 18:53:54
+    See readings:
+    https://bit.ly/NextGenCreds
 end note
 @enduml

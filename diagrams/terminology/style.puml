@@ -1,7 +1,7 @@
 /'Terminology in next generation credentials
 
 Created: 2024/05/24 11:42:22
-Last modified: 2024/05/24 15:58:46
+Last modified: 2024/05/24 16:59:51
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -21,7 +21,7 @@ skinparam{
     ArrowColor pBlack
     ArrowFontColor pBlack
 
-    backgroundColor transparent
+    'backgroundColor transparent Don't do this because of night mode
 
     ClassBackgroundColor pPaleGreen
     classFontColor pBlack

@@ -1,7 +1,7 @@
 /'Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 16:43:10
+Last modified: 2024/05/24 18:20:56
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -20,11 +20,6 @@ Title: NGC from 1EdTech Consortium
 !startsub Core
 class "1EdTech Consortium" <<taxOrg>>
 
-class "Comprehensive\nLearner Record (CLR)" <<taxStandard>>{
-    [[https://www.1edtech.org/standards/clr CLR at 1edtech]]
-}
-"Comprehensive\nLearner Record (CLR)" --|> "Verifiable credentials (W3C)"
-
 class "Open Badges" <<taxStandard>>{
     [[https://www.1edtech.org/standards/open-badges OB at 1edtech]]
 }
@@ -34,6 +29,22 @@ class "Open Badges" <<taxStandard>>{
 "1EdTech Consortium" ..> "Comprehensive\nLearner Record (CLR)": maintains
 "1EdTech Consortium" ..> "Open Badges": maintains
 
+
+class "Comprehensive\nLearner Record (CLR)" <<taxStandard>>{
+    [[https://www.1edtech.org/standards/clr CLR at 1edtech]]
+}
+"Comprehensive\nLearner Record (CLR)" --|> "Open Badges"
+/'
+The CLR Standard leverages the Open Badges standard and is compatible with the
+W3C Verifiable Credentials and the Credential Engine Registry.
+'/
+
+class "Credential Engine" <<taxOrg>> {
+    https://credentialengine.org/
+}
+class "Credential Transparency\nDescription Language (CTDL)" <<taxStandard>>
+"Credential Engine" ..> "Credential Transparency\nDescription Language (CTDL)"  : maintains
+"Comprehensive\nLearner Record (CLR)" --|> "Credential Transparency\nDescription Language (CTDL)"
 !endsub
 
 ' The Microcredential\nstandard seems more esoteric
