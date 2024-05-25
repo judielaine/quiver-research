@@ -9,6 +9,14 @@
 
 ## W3C Standards
 
+### W3C and verifiable credentials
+
+[Click to open diagram with links in browser](./diagramsExport/W3CTaxon-VC/W3CTaxonVC.svg)
+
 ![VC](./diagramsExport/W3CTaxon-VC/W3CTaxonVC.png)
+
+### W3C and FedCM
+
+[Click to open diagram with links in browser](./diagramsExport/W3CTaxon-VC/W3CTaxonFedCM.svg)
 
 ![FedCM](./diagramsExport/W3CTaxon-FedCM/W3CTaxonFedCM.png)
