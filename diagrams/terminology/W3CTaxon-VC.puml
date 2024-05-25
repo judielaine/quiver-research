@@ -2,7 +2,7 @@
 # Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 16:44:20
+Last modified: 2024/05/24 23:37:09
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -108,7 +108,7 @@ For citations and other documentation, please see
     'Decentralized Identifier and Verifiable Credentials Applications Community Group 
     !endsub
 
-
+    '#TODO: Why isn't the version note displaying?
     !include ./Version.puml
 @enduml
 
