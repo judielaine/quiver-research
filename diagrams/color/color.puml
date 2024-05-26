@@ -1,4 +1,5 @@
 @startuml colors
+
     ' https://color.adobe.com/create/color-wheel adobe@gcc
     ' AdobeColor-Plantuml base
     !define pBlue  #5588D9
@@ -9,4 +10,27 @@
     !define pOrange #D99B55
     !define pYellow #F5EDA8
     !define pRed #F5665D
+
+    skinparam{
+        'https://plantuml.com/skinparam
+        'https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
+    
+        ArrowColor pBlack
+        ArrowFontColor pBlack
+
+        'backgroundColor transparent Don't do this because of night mode
+
+        ClassBackgroundColor pPaleGreen
+        classFontColor pBlack
+        'classFontSize 10
+        'classFontName Aapex
+        
+        HyperlinkColor pRed
+
+        NoteBackgroundColor pYellow
+        NoteBorderColor pOrange
+        NoteFontColor pBlack
+
+        TitleFontColor pBlack
+    }   
 @enduml

@@ -1,7 +1,7 @@
 /'Terminology in next generation credentials
 
 Created: 2024/05/24 11:42:22
-Last modified: 2024/05/24 16:59:51
+Last modified: 2024/05/26 07:21:20
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -14,26 +14,5 @@ hide empty members
 !define taxOrg (O,pOrange) Organization
 !define taxWork (W,pBlue) Work Product
 
-skinparam{
-    'https://plantuml.com/skinparam
-    'https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
- 
-    ArrowColor pBlack
-    ArrowFontColor pBlack
 
-    'backgroundColor transparent Don't do this because of night mode
-
-    ClassBackgroundColor pPaleGreen
-    classFontColor pBlack
-    'classFontSize 10
-    'classFontName Aapex
-    
-    HyperlinkColor pRed
-
-    NoteBackgroundColor pYellow
-    NoteBorderColor pOrange
-    NoteFontColor pBlack
-
-    TitleFontColor pBlack
-}
 @enduml
