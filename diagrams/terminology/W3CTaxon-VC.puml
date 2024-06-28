@@ -2,7 +2,7 @@
 # Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 23:37:09
+Last modified: 2024/06/21 13:43:24
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -16,22 +16,22 @@ For citations and other documentation, please see
         !include ./fragmentW3C.puml
     !endsub 
 
-    !startsub VC
+    !startsub W3CVC
         class "Verifiable credentials WG" <<taxOrg>>{
             [[https://www.w3.org/groups/wg/vc/ Working group]]
         }
 
         "W3C" ..> "Verifiable credentials WG" : coordinates
         
+    !endsub
+    !startsub W3CVCspecification
         class "Verifiable credentials (W3C)" <<taxStandard>> {
             [[https://www.w3.org/TR/vc-data-model/ VC at W3C]]
         }
-
-        "Verifiable credentials WG" ..> "Verifiable credentials (W3C)": maintains
-
-        
     !endsub
-
+    !startsub W3CVClinks
+        "Verifiable credentials WG" ..> "Verifiable credentials (W3C)": maintains
+    !endsub
     !startsub Cred
 
 

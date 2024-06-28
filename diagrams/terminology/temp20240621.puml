@@ -1,0 +1,199 @@
+/'
+# Draft during 2024-06-21 Meeting
+
+Created: 2024/05/24 08:16:45
+Last modified: 2024/06/21 15:42:17
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml 20240621
+    !include style.puml
+    !includesub W3CTaxon-FedCM.puml!FedIDstandards
+    !includesub W3CTaxon-VC.puml!W3CVCspecification
+
+    !startsub basicTerms
+    class entity <<taxTerm>>{
+    }
+    class "credential (other)" <<taxTerm>>{
+        * [[https://csrc.nist.gov/glossary/term/credential NIST definitions]]
+        * [[https://fetch.spec.whatwg.org/#credentials Cookies, certs, and\nHTTPauth uname+pwd]]
+    }
+    !endsub
+    
+    !startsub DID
+    class "Decentralized Identifiers (DIDs)" <<taxStandard>>{
+    }
+    class DID <<taxSpecific>>{
+        decentralized identifier
+    }
+    "Decentralized Identifiers (DIDs)" .. DID
+    ' also in "Verifiable credentials (W3C)"
+    !endsub 
+
+
+    ' "Verifiable credentials (W3C)" =============================
+    !startsub W3CVCterms
+    class claims <<taxTerm>>{
+        assertion about a subject.
+    } 
+    "Verifiable credentials (W3C)" .. claims
+
+    class "credential (VC)"<<taxTerm>>{
+        * [[https://www.w3.org/TR/vc-data-model-2.0/#dfn-claims set of claims\nby an issuer\nmultiple subjects]]
+
+    } 
+    "Verifiable credentials (W3C)" .. "credential (VC)"
+
+    class "credential repositories" <<taxTerm>>{ 
+        Software that stores and protects 
+        access to holders' verifiable credentials.
+    }
+    ' NOTE "credential repositories" out of order in "Verifiable credentials (W3C)" 2024-06-21 14:22:44
+
+    "Verifiable credentials (W3C)" .. "credential repositories"
+
+    ' data minimization
+    ' decentralized identifier ie DID (above)
+    ' default graph: The graph containing all claims that are not explicitly part of a named graph.
+    ' entity (above)
+    ' graph
+
+    /'
+    A set of claims, forming a network of information composed of subjects and their relationship to other subjects or data. Each claim is part of a graph; this is either explicit in the case of named graphs, or implicit for the default graph.
+    '/
+
+    class holder <<taxTerm>>{
+        * posesses VCs
+        * generates VCs
+        * may be subject of claims in VCs
+        * store credentials in
+    }
+    entity <|-- holder
+
+    ' identity provider (IdP)
+
+    class issuer <<taxTerm>>{
+
+    }
+    entity <|-- issuer
+    
+    "Verifiable credentials (W3C)" .. issuer
+    ' named graph
+
+    class presentation <<taxTerm>> {
+        * data from verifiable credentials
+        * from issuers
+        * for specific verifier
+    }
+    "Verifiable credentials (W3C)" .. presentation
+
+    ' selective disclosure
+    ' unlinkable disclosure
+
+    class subject <<taxTerm>>{
+    
+    }
+    "Verifiable credentials (W3C)" .. subject
+
+
+    ' validation
+
+    class "verifiable credential" <<taxTerm>>{
+
+    }
+    "Verifiable credentials (W3C)" .. "verifiable credential"
+
+    ' verifiable data registry
+    ' verifiable presentation
+    ' verification
+
+    class verifier <<taxTerm>>{
+
+    }
+    entity <|-- verifier
+
+    ' verification material
+    ' URL
+    !endsub
+
+    !startsub W3CVCtermLinks
+    
+    subject <-- claims: about
+    claims <-- "credential (VC)" : contains
+    issuer --> "credential (VC)" : issues
+    holder --> "credential (VC)" : posesses, presents
+    verifier --> "credential (VC)" : receives
+
+    !endsub
+
+    !startsub CredManterms
+    ' "Digital Credentials" spec ===========================
+
+    'class "cryptographic signature" <<taxTerm>>{}
+
+    class "digital credential" <<taxTerm>>{
+        [[https://wicg.github.io/digital-credentials/#dfn-digital-credential defn]]
+        * digital document with 
+          * claims made by issuer
+          * claims about one or more subjects.
+        * cryptographically signed by issuer
+    }
+    "Digital Credentials" .. "digital credential"
+
+    class "exchange protocol" <<taxTerm>> {
+        [[https://wicg.github.io/digital-credentials/#dfn-digital-credential defn]]
+        used for exchanging a digital credential 
+        between a holder and a verifier
+        [[https://wicg.github.io/digital-credentials/#protocol-registry Registry]]
+    }
+    "Digital Credentials" .. "exchange protocol" 
+
+    class "presentation response" <<taxTerm>> {
+        [[https://wicg.github.io/digital-credentials/#dfn-digital-credential defn]]
+        format, via an exchange protocol, 
+        to respond to a query by a verifier.
+    }
+
+    class query <<taxTerm>> {
+        [[https://wicg.github.io/digital-credentials/#dfn-query defn]]
+        format, via an exchange protocol, 
+        to request a digital credential from a holder.
+    }
+
+    class "subject (person)" <<taxTerm>> {
+        Credential Management spec applies
+        to subjects that are people.
+    }
+
+    !endsub
+    
+    ' These links between  "Digital Credentials" spec and the more fundamental "Verifiable credentials (W3C)" spec are ommited for reuse purposes. 
+
+    "credential (VC)" <|-- "digital credential"
+    subject <|-- "subject (person)"
+
+    !startsub CredMantermsLinks
+
+    "exchange protocol" --> "presentation response" : defines
+    "exchange protocol" --> query : defines
+    "exchange protocol" -> "digital credential" : transports
+
+    'issuer --> "digital credential": issues
+    'issuer --> "cryptographic signature" : signs
+
+    !endsub
+
+
+
+@enduml
+@startuml
+    class "term" <<taxTerm>>{
+        
+    }
+
+    class "spec" <<taxSpecifc>>{
+        
+    }
+
+@enduml

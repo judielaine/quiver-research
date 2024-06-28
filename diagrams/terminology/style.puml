@@ -1,7 +1,7 @@
 /'Terminology in next generation credentials
 
 Created: 2024/05/24 11:42:22
-Last modified: 2024/06/21 13:05:29
+Last modified: 2024/06/21 13:17:21
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -10,9 +10,9 @@ For citations and other documentation, please see
 !include ../color/color.puml
 hide empty members
 
-!define taxStandard (S,pGreen) Standard
+!define taxStandard (S,pDKGreen) Standard
 !define taxOrg (O,pOrange) Organization
 !define taxWork (W,pBlue) Work Product
-!define taxTerm (T, pGreen) Terminology
-
+!define taxTerm (T, pPaleGreen) Generic
+!define taxSpecific (T, pGreen) Specific
 @enduml

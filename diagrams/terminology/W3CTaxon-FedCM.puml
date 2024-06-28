@@ -2,10 +2,13 @@
 # Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 16:43:46
+Last modified: 2024/06/21 15:38:37
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+
+Reminder:
+    !includesub W3CTaxon-FedCM.puml!FedIDstandards
 '/
 @startuml W3CTaxonFedCM
     !include style.puml
@@ -14,6 +17,15 @@ For citations and other documentation, please see
 
     !startsub Core
         !include ./fragmentW3C.puml
+
+    !endsub 
+
+    !startsub CredMan
+        class "Credential Management" <<taxStandard>>{
+            [[https://www.w3.org/TR/credential-management-1/ CM at W3C]]
+        }
+        "W3C" ..> "Credential Management"  : maintains
+
     !endsub 
 
     !startsub FedID
@@ -33,22 +45,6 @@ For citations and other documentation, please see
         }
         "W3C" ..> "Web Platform Incubator CG" : coordinates
 
-        class "Credential Management" <<taxStandard>>{
-            [[https://www.w3.org/TR/credential-management-1/ CM at W3C]]
-        }
-        "W3C" ..> "Credential Management"  : maintains
-
-        class "Digital Credentials" <<taxWork>>{
-            [[https://github.com/WICG/digital-credentials/ DC at GitHub]]
-        }
-        "Web Platform Incubator CG"  ..> "Digital Credentials" : incubates
-        "Digital Credentials" --|> "Credential Management" 
-       /' Digital Credentials builds upon Credential Management to enable the 
-        secure and private exchange of digital identity information. It 
-        facilitates authenticated interactions by representing digital 
-        credentials through the DigitalIdentity interface, which embodies 
-        verifiable claims about an individual's identity.'/
-
         note as wgFedid450
             [[https://github.com/w3c/strategy/issues/450 issue 450]]
             Adding Digital 
@@ -58,8 +54,25 @@ For citations and other documentation, please see
 
        "Federated Identity WG" --  wgFedid450
        wgFedid450 --  "Digital Credentials" 
+ 
+    !endsub
+    !startsub FedIDstandards
+        class "Digital Credentials" <<taxWork>>{
+            [[https://github.com/WICG/digital-credentials/ DC at GitHub]]
+        }
+
+       /' Digital Credentials builds upon Credential Management to enable the 
+        secure and private exchange of digital identity information. It 
+        facilitates authenticated interactions by representing digital 
+        credentials through the DigitalIdentity interface, which embodies 
+        verifiable claims about an individual's identity.'/
 
     !endsub
+    !startsub FedIDlinks
+        "Web Platform Incubator CG"  ..> "Digital Credentials" : incubates
+        "Digital Credentials" --|> "Credential Management" 
+
+    !endsub  
 
     !include ./Version.puml
 @enduml
