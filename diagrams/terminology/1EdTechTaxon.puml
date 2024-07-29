@@ -1,7 +1,7 @@
 /'Terminology in next generation credentials
 
 Created: 2024/05/24 08:16:45
-Last modified: 2024/05/24 18:20:56
+Last modified: 2024/07/28 16:11:08
 
 For citations and other documentation, please see 
 [Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
@@ -11,8 +11,8 @@ For citations and other documentation, please see
 
 !include style.puml
 
-!includesub ./W3CTaxon-VC.puml!Core
-!includesub ./W3CTaxon-VC.puml!VC
+!include ./fragmentW3C.puml
+!includesub ./W3CTaxon-VC.puml!W3CVCspecification
 !include ./fragmentSchemaLD.puml
 
 Title: NGC from 1EdTech Consortium
