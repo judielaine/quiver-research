@@ -1,0 +1,88 @@
+/'
+# Terminology in next generation credentials
+
+Created: 2024/07/28 16:18:31
+Last modified: 2024/07/28 17:12:11
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+
+Reminder:
+    !includesub OIDFTaxon.puml!whatever
+'/
+
+@startuml OpenIDFoundation
+    !include style.puml
+
+    Title: OpenID Foundation and VC
+    
+    class "OpenID Foundation" <<taxOrg>>
+
+    class "OpenID Federation" <<taxStandard>>{
+        [[https://openid.net/specs/openid-federation-1_0.html OpenID Fed]]
+        "Determining that two Entities belong
+        to the same federation is the basis for
+        establishing trust between them..."
+    }
+    "OpenID Foundation" ..> "OpenID Federation"  : maintains
+
+
+    Folder "OpenID Federation model" {
+        class "Entity" <<taxSpecific>>{
+            {field} Entity Identifier
+            {field} Entity Type
+        }
+        class "Entity Statement" <<taxSpecific>>{
+            {field} iss, sub
+            {field} iat, exp, jwks
+            {field} [opt] authority_hints
+            {field} [opt] metadata, metadata_policy
+            {field} [opt] trust_marks, .._issuers, .._owners
+            ... and MORE
+        }
+        "Entity"  . "many" "Entity Statement" : has >
+        
+        class "Trust anchor" <<taxSpecific>>{
+            An authority administrated by its **Federation** 
+            **Operator**
+        }
+        class "Federation Entity"<<taxSpecific>>{
+            Has a Trust Chain to a Trust anchor. May be a
+            **Leaf Entity** with no Subordinate Entities or
+            an **Intermediate Entity**, which both is 
+            **Superior** to other entities and **Subordinate**
+            other another entity. 
+            **authority_hints** point to **immediate**
+            **superiors**.
+        }
+        class "Trust Mark issuer" <<taxSpecific>>{
+            Owns the right to a Trust Mark identifier
+        }
+        "Trust anchor" <|-- "Entity" 
+        "Federation Entity" <|-- "Entity" 
+        "Trust Mark issuer"<|-- "Entity" 
+        "Trust anchor" <.> "Federation Entity" : Trust chain
+        
+        class "Trust Mark" <<taxSpecific>>{
+            {field}  kid (Key ID)
+        }
+
+        class "Entity Configuration" <<taxSpecific>>{
+            {field}Federation Entity Keys
+        }   
+        "Entity Configuration" <|-- "Entity Statement"
+        
+        class "Subordinate Statement" <<taxSpecific>>{
+        }
+        "Subordinate Statement" <|--  "Entity Statement"
+
+        "Federation Entity" .> "Entity Configuration" : issues
+        "Trust anchor"  .>  "Subordinate Statement" : issues
+
+        class JWT <<taxTerm>> {
+
+        }
+        "Trust Mark" <|-- JWT : trust-mark+jwt
+        "Entity Statement"  <|-- JWT : entity-statement+jwt
+    }
+    "OpenID Federation" ..> "OpenID Federation model" : defines

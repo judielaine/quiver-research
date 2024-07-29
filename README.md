@@ -7,6 +7,10 @@
 
 ![Overview class diagram](./diagramsExport/terminology/sprawlingTaxonomy.png)
 
+## OpenID
+
+* [OpenID Federation](https://openid.net/specs/openid-federation-1_0.html)
+
 ## W3C Standards
 
 ### W3C and verifiable credentials

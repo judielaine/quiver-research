@@ -1,7 +1,7 @@
 @startuml version
 note as version
     Next generation credentials
-    Last modified: 2024/05/24 18:53:54
+    Last modified: 2024/07/28 16:16:21
     See readings:
     https://bit.ly/NextGenCreds
 end note

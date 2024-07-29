@@ -1,0 +1,13 @@
+/' Terminology in next generation credentials
+
+Created: 2024/07/28 16:11:08
+Last modified: 2024/07/28 16:18:11
+
+For citations and other documentation, please see 
+[Zotero group library](https://www.zotero.org/groups/5541646/nextgencredentials)
+'/
+@startuml 20240729NGCTFWG
+    !include style.puml
+
+    Title: 2024-07-29 NGCTFWG
+
