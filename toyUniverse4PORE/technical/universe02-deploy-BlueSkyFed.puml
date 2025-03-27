@@ -1,0 +1,129 @@
+/'
+# universe02-deploy-BlueSkyFed
+Created: 2025/03/19 17:11:14
+Last modified: 2025/03/27 16:56:30
+'/
+@startuml universe02-deploy-BlueSkyFed
+!include resources/style.puml
+
+
+Title Blue Sky Federation deployment detail
+frame "Blue Sky Federation" {
+
+card oidfReq noteCardStyle[
+federation_fetch_endpoint  §8.1. 
+    MUST. https; query params allowed; no fragment
+federation_list_endpoint  §8.2.
+    MUST. https; query params allowed; no fragment
+federation_resolve_endpoint §8.3.
+    MAY. https; query params allowed; no fragment
+federation_trust_mark_status_endpoint §8.4.
+    SHOULD. https; query params allowed; no fragment
+federation_trust_mark_list_endpoint §8.5.
+    MAY. https; query params allowed; no fragment
+federation_trust_mark_endpoint  §8.6.
+    MAY. https; query params allowed; no fragment
+federation_historical_keys_endpoint §8.7.
+    MAY. https; query params allowed; no fragment
+endpoint_auth_signing_alg_values_supported §8.8.
+    OPTIONAL. JSON array containing a list of the supported 
+    JWS [RFC7515] algorithms (alg values) for signing the 
+    JWT [RFC7519] used for private_key_jwt when 
+    authenticating to federation endpoints, as described 
+    in §8.8. 
+]
+
+component "https://bluesky.org" as bsentity uniMockStyle {
+    interface "GET\n/.well-known\n/openid-\nfederation" as bswk oidfStyle
+    interface "/.key-history\nGET" as bskh  oidfStyle
+}
+
+component "https://fed.bluesky.org" as bsmeta uniMockStyle {
+
+    component "Admin Site" as bsmetaadmin << Rstereo >> uniStyle
+    'interface "/auto-admin" as bsmetaauto uniStyle
+    interface "GET /policy" as bsmetapolicy oidfStyle
+    interface "GET\nfetch?sub=[entity]" as bsfetch  oidfStyle
+    interface "GET\n/list" as bsfedlist oidfStyle
+    interface "GET\n/resolve" as bsresolve oidfStyle
+    
+    file "Comprehensive\nmetadata policy" as bsfullpolicy  oidfStyle
+
+    database bsmeta_db  uniStyle [
+        Metadata datastore
+        --
+        organization table
+        entity table: entity_id, jwks, fk org
+    ]
+
+    process "Entity\nconfiguration\nmonitor" as bsmonitor uniStyle
+
+    bsmonitor -[bold]-* bsmeta_db
+    bsmetaadmin -[bold]-* bsmeta_db
+    bsmetaadmin -[bold]-* bsfullpolicy
+
+    'bsmetaauto -[bold]-* bsmeta_db
+
+    bsmetapolicy -[dashed]-0 bsfullpolicy
+
+    bsfetch -[dashed]-0 bsmeta_db
+    bsfetch -[dashed]-0 bsfullpolicy
+
+    bsfedlist -[dashed]-0 bsmeta_db
+    bsresolve -[dashed]-0 bsmeta_db
+}
+
+component "https://trustmark.bluesky.org" as bstmservice uniMockStyle{
+
+    card Nbstmservice noteCardStyle[ 
+        Not reviewed
+    ]
+
+    component "Admin Site" as bstmadmin << Rstereo >>  uniStyle
+    interface "/status\nGET, POST" as bstmstatus  oidfStyle
+    interface "/list\nGET, POST" as bstmlist oidfStyle
+    interface "/trustmark\nGET, POST" as bstm oidfStyle
+    database "Metadata datastore" as bstm_db  uniStyle
+    bstmadmin .. bstm_db
+    bstmstatus .. bstm_db
+    bstmlist .. bstm_db
+    bstm  .. bstm_db
+}
+
+
+component "https://keystore.bluesky.org" as bskeystore  uniStyle  { 
+    storage "Key storage" as keyDB
+    interface "/signing-service\n(internal)" as bssign oidfStyle
+    interface "/my-pub-keys\n(internal)" as bspubkeys
+    interface "/my-oldpub-keys\n(internal)" as bsoldkeys
+    bssign  -[dashed]-0  keyDB
+    bspubkeys -[dashed]-0  keyDB
+    bsoldkeys -[dashed]-0  keyDB
+
+    card Nbskeystore noteCardStyle[ 
+        Not reviewed
+    ]
+
+}
+
+component "https://oidc.bluesky.org" as bsidp << Istereo >>  uniStyle
+component "https://oauth.bluesky.org" as bsoauth << Astereo >> uniStyle
+
+oidfReq -[hidden]-> bsmeta
+bsentity -[hidden]->bsmeta
+bsidp  -[hidden]> bsoauth
+bsoauth  -[hidden]-> bsmeta
+bsentity --> bspubkeys
+bsentity --> bsoldkeys
+bsentity -[signingBracketArrow]-( bssign: <color pDKRed> historical keys\n<color pDKRed>JWK set\n-or-\n<color pDKRed>Entity\n<color pDKRed>Configuration 
+bsmeta -[signingBracketArrow]-( bssign: <color pDKRed>Subordinate Statements
+}
+
+
+cloud "Internet" {
+    component "Federation Entity"  oidfStyle {
+        interface "GET\n/.well-known\n/openid-\nfederation" as wk oidfStyle
+    }
+}
+
+bsmonitor -[dashed]-0 wk: GET\n/.well-known\n/openid-\nfederation\n(monitor key rollover)

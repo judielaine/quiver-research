@@ -1,0 +1,48 @@
+/'
+# universe01-deploy-EasternU
+Created: 2025/03/19 17:11:14
+Last modified: 2025/03/27 12:21:47
+'/
+@startuml universe01-deploy-EasternU
+!include resources/style.puml
+
+title Eastern University before federation
+
+frame "Craft News and Research" {
+   component "Journal service" {
+      file "Intro to crafts" as intro << Pstereo >>
+   }
+}
+
+frame "Learning R Us" {
+   component "LRS LMS" as lrslms  << Rstereo >>
+}
+
+frame "Eastern University" {
+   component "EU" as euidp << Istereo >> 
+   component "EU" as euoauth << Astereo >>
+   'component "EU"  as euvci << Cstereo >>
+   component "EU portal" as euportal << Mstereo >>
+   agent "EU mobile" as eumobile << Mstereo >>
+   component "Lathe" as lathe << Pstereo >>
+}
+
+lrslms -[oidcBracketArrow]> euidp : OIDC;\nJWKS
+euidp <-[oidcBracketArrow]- euoauth : OIDC;\nJWKS
+euportal -[oidcBracketArrow]> euidp : OIDC;\nJWKS
+euportal -[ccgBracketArrow]> euoauth : CCG\n(read@icj)
+euportal -[acgBracketArrow]> euoauth : ACG\n(lathe)
+euidp <-[oidcBracketArrow]- eumobile : OIDC;\nJWKS
+euoauth <-[acgBracketArrow] eumobile : ACG\n(lathe; read@icj)
+
+euportal -[oauthBracketArrow]-> lathe : <color pOrange>OAuth\n<color pOrange>(lathe)
+eumobile -[oauthBracketArrow]-> lathe : <color pOrange>OAuth\n<color pOrange>(lathe)
+euoauth <-[jwksBracketArrow]- lathe : <color pBlue>JWKS
+
+euportal -[oauthBracketArrow]> intro: <color pOrange>OAuth\n<color pOrange>(read@icj)
+eumobile -[oauthBracketArrow]> intro: <color pOrange>OAuth\n<color pOrange>(read@icj)
+euoauth <-[jwksBracketArrow]- intro : <color pBlue>JWKS
+
+
+
+@enduml

@@ -1,0 +1,215 @@
+openapi: 3.1.0
+info:
+  title: Blue Sky Federation API
+  version: '1.0.0'
+  description: OpenID Federation endpoints for Blue Sky Federation
+servers:
+  - url: https://fed.bluesky.org
+    description: Federation metadata server
+  - url: https://trustmark.bluesky.org
+    description: Trust mark services
+  - url: https://bluesky.org
+    description: Entity configuration
+
+paths:
+  /.well-known/openid-federation:
+    get:
+      summary: Entity Configuration
+      description: |
+        Retrieves the Entity Configuration.
+        Defined in OpenID Federation 1.0 specification.
+      tags:
+        - OIDF Specification
+
+  /auto-admin:
+    get:
+      summary: Auto Admin Configuration
+      description: TBD
+    post:
+      summary: Update Auto Admin Configuration
+      description: TBD
+
+  /policy:
+    get:
+      summary: Federation Policy
+      description: |
+        Retrieves federation policy information.
+        Toy universe proposal to support subsidiary entity
+        participation. 
+
+  /fetch:
+    get:
+      summary: Retrieving Subordinate Statements about entities
+      description: |
+        Part of calculating the trust chain.
+        Defined in OpenID Federation 1.0 specification §8.1.
+        "The Subordinate Statements are obtained from the 
+        federation_fetch_endpoint of the subject's Immediate 
+        Superior. The URL of the federation_fetch_endpoint is 
+        discovered in the Immediate Superior's Entity 
+        Configuration." §4.2
+      parameters:
+        - name: sub
+          in: query
+          schema:
+            type: string
+          description: Subject identifier of the entity; 
+      responses:
+        '200':
+          description: Successful response containing Entity Statement
+          content:
+            application/entity-statement+jwt:
+              schema:
+                $ref: '#/components/schemas/EntityStatement'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Requested subject not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - OIDF Specification
+
+  /list:
+    get:
+      summary: Federation List
+      description: |
+        Lists federation members.
+        Defined in OpenID Federation 1.0 specification §8.2.
+      tags:
+        - OIDF Specification
+
+  /resolve:
+    get:
+      summary: Resolve Entity
+      description: |
+        Resolves entity in the federation.
+        Defined in OpenID Federation 1.0 specification §8.3.
+      tags:
+        - OIDF Specification
+
+  /status:
+    get:
+      summary: Trust Mark Status
+      description: |
+        Gets trust mark status.
+        Defined in OpenID Federation 1.0 specification §8.4.
+      tags:
+        - OIDF Specification
+
+  /trustmark/list:
+    get:
+      summary: Trust Mark List
+      description: |
+        Lists available trust marks.
+        Defined in OpenID Federation 1.0 specification §8.5.
+      tags:
+        - OIDF Specification
+
+  /trustmark:
+    get:
+      summary: Trust Mark
+      description: |
+        Retrieves trust mark information.
+        Defined in OpenID Federation 1.0 specification §8.6.
+      tags:
+        - OIDF Specification
+
+components:
+  schemas:
+    EntityStatement:
+      type: object
+      required:
+        - iss
+        - sub
+        - exp
+        - iat
+        - source_endpoint
+      properties:
+        iss:
+          type: string
+          format: uri
+        sub:
+          type: string
+          format: uri
+        exp:
+          type: integer
+          description: Expiration time (Unix timestamp)
+        iat:
+          type: integer
+          description: Issued at time (Unix timestamp)
+        source_endpoint:
+          type: string
+          format: uri
+        jwks:
+          $ref: '#/components/schemas/JWKS'
+        metadata:
+          type: object
+          properties:
+            federation_entity:
+              type: object
+              properties:
+                organization_name:
+                  type: string
+        metadata_policy:
+          $ref: '#/components/schemas/MetadataPolicy'
+      example:
+        iss: "https://edugain.org"
+        sub: "https://openid.sunet.se"
+        exp: 1568397247
+        iat: 1568310847
+        source_endpoint: "https://edugain.org/federation_fetch_endpoint"
+        jwks:
+          keys:
+            - e: "AQAB"
+              kid: "dEEtRjlzY3djcENuT01wOGxrZlkxb3RIQVJlMTY0..."
+              kty: "RSA"
+              n: "x97YKqc9Cs-DNtFrQ7_vhXoH9bwkDWW6En2jJ044yH..."
+        metadata:
+          federation_entity:
+            organization_name: "SUNET"
+        metadata_policy:
+          openid_provider:
+            subject_types_supported:
+              value: ["pairwise"]
+            token_endpoint_auth_methods_supported:
+              default: ["private_key_jwt"]
+              subset_of: ["private_key_jwt", "client_secret_jwt"]
+              superset_of: ["private_key_jwt"]
+    JWKS:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            properties:
+              kid:
+                type: string
+              kty:
+                type: string
+              e:
+                type: string
+              n:
+                type: string
+
+    MetadataPolicy:
+      type: object
+      description: Placeholder for complex metadata policy schema
+      
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum: [invalid_request, not_found]
+        error_description:
+          type: string

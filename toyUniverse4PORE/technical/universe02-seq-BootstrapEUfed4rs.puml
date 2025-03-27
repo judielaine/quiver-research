@@ -1,0 +1,168 @@
+/'
+# universe02-seq-BootstrapEUfed4rs
+Created: 2025/03/24 14:58:19
+Last modified: 2025/03/27 18:31:40
+'/
+
+@startuml universe02-seq-BootstrapEUfed4rs.01
+!include resources/style.puml
+
+title Initial config of fed4rs service at EU
+
+actor "EU staff" as euStaff
+
+box "Fed4rs service"  pPaleGreen
+    participant "Initial config"  as fed4rsinit
+    participant "Fed4RS admin" as eumetaadmin  << Rstereo >> 
+end box
+
+participant "idp.eu.edu" as euidp << Istereo >> 
+
+box "Blue Sky Federation"  pPaleGreen
+    participant "Admin Site" as bsmetaadmin << Rstereo >>
+end box
+
+actor "Blue Sky\nstaff" as bsStaff
+
+== Join federation ==
+
+euStaff o<-[seqOutOfBand]>o bsStaff : Initial federation agreement
+
+note over euStaff, bsStaff
+    What is required in the initial agreement? Posit
+    * <color pBlue>organization_name#x-legal = "The Eastern University at Central City"</color>
+    * <color pBlue>organization_name = "Eastern University"</color>
+    * <color pBlue>[tech|admin|support|security] contacts = [tech|admin|support|security]@eu.edu</color>
+    * <color pBlue>homepage_uri = "https://eu.edu"</color>
+    * <color pBlue> logo_uri = "https://eu.edu/imgs/flamingocean.png"</color>
+    * <color pBlue> policy_uri = "https://eu.edu/privacy-and-security.html"</color>
+
+    * will the member operate an intermediary?  Yes
+        * establish entity name constraints 6.2.2 OIDFv42 (Note §4.2.1.10 rfc5280)
+            * <color pBlue>bluesky_entity_name_constraint = "eu.edu"</color>
+    * will the member operate an provider?  Yes
+        * establish equivalent of shibmd:Scope  
+            * <color pBlue>bluesky_shibmd_scope = "eu.edu"</color>
+    The federation does due diligence in vetting the DNS and legal name, contracts signed.
+    The federation provides the following:
+    * <color pDKRed>federation's entity identifier</color>
+    * <color pDKRed>federation public key as a jwks file </color>(see Section 11.3 (Redundant Retrieval of Trust Anchor Keys)
+    * some way to access the administration UI
+end note
+
+== Blue sky staff configure new organization ==
+
+bsStaff <-> bsmetaadmin : configure new organization
+
+note over bsStaff, bsmetaadmin
+    The data will be used to populate the metadata policy 
+    for all subordinate statements.
+    <color pBlue>bluesky_entity_name_constraint = "eu.edu"</color>
+    -  §6.2.2. Naming Constraints OIDFv42
+    <color pBlue>bluesky_shibmd_scope = "eu.edu"</color>
+    - For OPs, probably a custom claim; §6.1.3.1.1. 
+      value OIDFv42
+    <color pBlue>allow organization to run intermediary </color>
+    <color pBlue>organization_name#x-legal =</color>
+    \t<color pBlue>"The Eastern University at Central City"</color>
+    - All entities; §6.1.3.1.1. value OIDFv42
+      Using `value` overrides the value an entity may have
+      stated in its Entity Statement
+    <color pBlue>organization_name = "Eastern University"</color>
+    - All entities; §6.1.3.1.3. default OIDFv42 
+      Using `default` allows entities to have different 
+      org display names, but ensures one is present
+    
+    For the following, the metadata policy depends on entity
+    type. Depending on need, the policy may supplements with
+    §6.1.3.1.2. add, override with `value`, or ensure presence 
+    with `default`
+    
+    <color pBlue>[tech|admin|support|security] contacts = </color>
+        \t<color pBlue>"[tech|admin|support|security]@eu.edu</color>
+    <color pBlue>homepage_uri = "https://eu.edu"</color>
+    <color pBlue> logo_uri = "https://eu.edu/imgs/flamingocean.png"</color>
+    <color pBlue> policy_uri = "https://eu.edu/privacy-and-security.html"</color>
+end note
+
+== Initial configuration of fed4rs service with IdP ==
+
+euStaff <-> euidp : IdP configuration
+note over euStaff, euidp
+    Provide redirect_uri per documentation; acquire client ID and secret. 
+    Potentially establish scope/group to indicate admin access to fed4rs service.
+end note
+
+
+euStaff -> fed4rsinit: boot up
+activate fed4rsinit
+fed4rsinit -> euStaff: Configuration page
+note over euStaff, eumetaadmin
+    Application configuration collects the following
+    * fed4rs_url = "https://eu.edu/fed4rs"
+    (The URL complies with the bluesky_entity_name_constraint, 
+    and defines the OpenID Connect Relying Party redirect_uri)
+    Configuration as a non-federated OIDC client:
+    * client ID from the IDP
+    * client secret from the IDP
+    * scopes
+    Scopes may include admin scope; may instead establish 
+    principals allowed to administrate in another way.
+end note
+euStaff -> fed4rsinit: submit
+fed4rsinit <-> eumetaadmin: ACTIVATE
+destroy fed4rsinit
+
+== Configure fed4rs service as an intermediary ==
+
+euStaff -> eumetaadmin : /fed4rs/login
+activate eumetaadmin
+note over euStaff, euidp
+    Un-federated OIDC authentication flow
+end note
+eumetaadmin -> euStaff: Admin interface
+
+note over euStaff, eumetaadmin
+    Act as OIDFv42 Intermediary? Yes
+        * federation's Entity Identifier: "https://bluesky.org"
+            will use as <color pDKRed>authority_hints</color>
+        * <color pDKRed>federation public key in a file bluesky.jwks</color>
+    Act as OIDFv42 Trust Anchor? No
+end note
+euStaff -> eumetaadmin: submit federation config
+fed4rsinit -> euStaff: return entity registration details
+note over euStaff, eumetaadmin
+    Details needed for registering the intermediary
+    at the federation:
+    * <color pDKRed>intermediary entity ID "https://eu.edu/fed4rs/fed4rs"</color>
+    * <color pDKRed>intermediary public key in a file eufed4rs.jwks</color>
+end note
+eumetaadmin  -[seqReallyOther]->o eumetaadmin: register TS jwks\nand kick off\nmonitoring 
+bsmetaadmin o<-[seqReallyOther]-o eumetaadmin: https://bluesky.org/.well-known/openid-configuration
+eumetaadmin o<-[seqReallyOther]-o bsmetaadmin
+eumetaadmin o-[seqReallyOther]->o eumetaadmin: confirm keys match
+
+euStaff <-> bsmetaadmin : /fed4rs/login, per initial agreement
+activate bsmetaadmin
+bsmetaadmin -> euStaff: Admin interface
+note over euStaff, bsmetaadmin
+    * <color pDKRed>intermediary entity ID "https://eu.edu/fed4rs/fed4rs"</color>
+    * <color pDKRed>intermediary public key in a file eufed4rs.jwks</color>
+end note
+euStaff -> bsmetaadmin: submit intermediary config
+bsmetaadmin -> euStaff: return entity metadata policy details
+note over euStaff, bsmetaadmin
+    Posit the federation provides the metadata policy that would be issued in the Subordinate Statement, and, 
+    because this is an intermediary, it may provide a second, more complete policy that could be applied to 
+    any entity that uses the intermediary. 
+end note
+euStaff -> eumetaadmin: upload both metadata policies
+eumetaadmin  -[seqReallyOther]->o eumetaadmin: generate first\nentity statement 
+euStaff -> bsmetaadmin: trigger first process "Entity Configuration Monitor" 
+bsmetaadmin -[seqReallyOther]->o bsmetaadmin
+bsmetaadmin o-[seqReallyOther]->o eumetaadmin: https://eu.edu/fed4rs/fed4rs/.well-known/openid-configuration
+eumetaadmin o-[seqReallyOther]->o bsmetaadmin
+bsmetaadmin o-[seqReallyOther]->o bsmetaadmin: confirm keys match
+
+
+@enduml

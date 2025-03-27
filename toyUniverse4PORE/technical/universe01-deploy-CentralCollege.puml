@@ -1,0 +1,84 @@
+/'
+# universe01-deploy-CentralCollege
+Created: 2025/03/26 10:07:59
+Last modified: 2025/03/27 11:41:46
+'/
+
+/'
+#### 1.1.2 Central College (Outsourced approach)
+
+- Contracts with Big Box for IdP services
+- Contracts with Learnings R Us for:
+  - LMS platform
+  - Authorization server
+  - Credential issuance (diplomas/transcripts as VCs)
+  - Portal services
+- No self-hosted technical resources
+
+### 1.2 Service Providers
+
+#### 1.2.1 Learnings R Us
+
+- Provides LMS to both Eastern and Central
+- Provides authorization server to Central College
+- Issues credentials on behalf of Central College
+- Issues class badges (used by Eastern)
+- Provides portal service to Central College
+- Issues CAN_ACCESS tokens for journal resources
+
+### 2.2 Central College Interactions
+
+Central College demonstrates an outsourced identity and access management approach:
+
+1. **Delegated Identity Management**:
+   - Authentication happens via Big Box IdP
+   - Authorization decisions delegated to Learning R Us
+   - Clear separation between authentication and authorization
+
+2. **Service Consumption**:
+   - Central College users access resources through delegated services
+   - Learning R Us acts as Central's representative for most services
+   - Resource access governed by contractual relationships
+
+3. **Resource Access**:
+   - Central's library can access Woodworking Guild journal
+   - Subscription validation through proper authorization tokens
+   - Tokens issued by Learning R Us's authorization server
+
+'/
+
+@startuml universe01-deploy-CentralCollege
+!include resources/style.puml
+
+title Central College before federation
+
+frame "Craft News and Research" {
+   component "Journal service" {
+      file "Intro to crafts" as intro << Pstereo >>
+   }
+}
+
+frame "Learning R Us" {
+   component "LRS LMS" as lrslms  << Rstereo >>
+   component "LRS" as lrsoauth << Astereo >>
+   'component "LRS"  as lrsvci << Cstereo >>
+   component "LRS portal" as lrsportal << Mstereo >>
+}
+
+frame "Central College" {
+    actor "Students,\nstaff, and\nfaculty" as cc
+}
+
+frame "Big Box IdP" {
+    component "BB" as bbidp << Istereo >> 
+}
+
+lrslms -[oidcBracketArrow]-> bbidp : OIDC;\nJWKS
+bbidp <-[oidcBracketArrow]- lrsoauth : OIDC;\nJWKS
+lrsportal -[oidcBracketArrow]-> bbidp : OIDC;\nJWKS
+lrsportal -[ccgBracketArrow]> lrsoauth : <color pDKGreen>CCG\n(read@icj)
+
+lrsportal -[oauthBracketArrow]> intro: <color pOrange>OAuth\n<color pOrange>(read@icj)
+lrsoauth <-[jwksBracketArrow]- intro : <color pBlue>JWKS
+
+@enduml

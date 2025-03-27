@@ -1,0 +1,91 @@
+@startuml colors
+
+    ' https://color.adobe.com/create/color-wheel adobe@gcc
+    ' AdobeColor-Plantuml base
+    !define pBlue  #5588D9
+    !define pBluenoh  5588D9
+    !define pBlack #0A2A61
+    !define pBlacknoh 0A2A61
+    !define pPaleGreen #ECF6F4
+    !define pPaleGreennoh ECF6F4
+    !define pGreen #55D9D6
+    !define pGreennoh 55D9D6
+    !define pDKGreen #075C5B
+    !define pDKGreennoh 075C5B
+    !define pOrange #D99B55
+    !define pOrangenoh D99B55    
+    !define pYellow #F5EDA8
+    !define pYellownoh F5EDA8
+    !define pRed #F5665D
+    !define pRednoh F5665D
+    ' 2025-03-26 added dark red for text
+    !define pDKRed #A81007
+    !define pDKRednoh A81007
+
+    skinparam{
+
+        actorStyle awesome
+
+        'https://plantuml.com/skinparam
+        'https://plantuml-documentation.readthedocs.io/en/latest/formatting/all-skin-params.html
+    
+        ArrowColor pBlack
+        ArrowFontColor pBlack
+
+        'backgroundColor transparent Don't do this because of night mode
+
+        ClassBackgroundColor pPaleGreen
+        classFontColor pBlack
+        'classFontSize 10
+        'classFontName Aapex
+        
+        HyperlinkColor pRed
+
+        NoteBackgroundColor pYellow
+        NoteBorderColor pOrange
+        NoteFontColor pBlack
+
+        TitleFontColor pBlack
+    }   
+
+    !define Fstereo (F,pRed) "Federation" 
+    !define Istereo (I,pGreen) "OIDC Provider"
+    !define Astereo (A,pGreen) "OAuth Authz Server"
+    !define Cstereo (C,pGreen) "VC issuer"
+    !define Rstereo (R,pBlue) "OpenID Connect RP"
+    !define Pstereo (P,pBlue) "OAuth Protected"
+    !define Ostereo (O,pBlue) "OAuth Client"
+    !define Vstereo (V,pBlue) "VC verifier"
+    !define Mstereo (M,pOrange) "Multi role"
+    
+    !define uniMockStyle   #pPaleGreennoh;line:pDKGreennoh;text:pDKGreennoh
+    !define uniStyle   #pGreennoh;line:pDKGreennoh;line.dotted;text:pDKGreennoh
+    !define oidfStyle   #pOrangenoh;line:pRednoh;text:pDKRednoh
+    !define noteCardStyle   #pYellownoh;line:pOrangenoh;text:pBlacknoh
+
+    'Arrow styles : Bracketed style for both class, deployment
+    ' Class arrows used -[xxxClassArrow]> 
+    ' Deployment arrows used -[xxxDeployArrow]>
+    !define oidcBracketArrow pBlack,plain,thickness=2
+    !define ccgBracketArrow pDKGreen,dashed,thickness=1
+    !define acgBracketArrow pGreen,plain,thickness=2
+    !define oauthBracketArrow pOrange,plain,thickness=1
+    !define jwksBracketArrow pBlue,dotted,thickness=1
+    !define signingBracketArrow pOrange,plain,thickness=2  
+    /' -[signingBracketArrow]-( '/
+
+    ' Sequence arrows style color, use symbols for endpoints
+    !define seqOutOfBand pRed /' o<-[seqOutOfBand]>o '/
+    !define seqReallyOther pOrange /' -[seqReallyOther]->o '/
+    hide footbox
+
+@enduml
+/'
+
+foo -[#red,thickness=1]-> bar1          : [#red,1]
+foo -[#red,dashed,thickness=2]-> bar2   : [#red,dashed,2]
+foo -[#green,dashed,thickness=4]-> bar3 : [#green,dashed,4]
+foo -[#blue,dotted,thickness=8]-> bar4  : [blue,dotted,8]
+foo -[#blue,plain,thickness=16]-> bar5  : [blue,plain,16]
+foo -[#blue;#green,dashed,thickness=4]-> bar6  : [blue;green,dashed,4]
+'/

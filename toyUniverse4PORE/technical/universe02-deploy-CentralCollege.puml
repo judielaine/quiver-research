@@ -1,0 +1,43 @@
+/'
+# universe02-deploy-CentralCollege
+Created: 2025/03/26 10:09:03
+Last modified: 2025/03/27 11:54:24
+'/
+ 
+@startuml universe02-deploy-CentralCollege
+
+!include resources/style.puml
+
+
+title Central College joining federation
+
+frame "Craft News and Research" {
+   component "Journal service" {
+      file "Intro to crafts" as intro << Pstereo >>
+   }
+}
+
+frame "Learning R Us" {
+   component "LRS LMS" as lrslms  << Rstereo >>
+   component "LRS" as lrsoauth << Astereo >>
+   'component "LRS"  as lrsvci << Cstereo >>
+   component "LRS portal" as lrsportal << Mstereo >>
+}
+
+frame "Central College" {
+    actor "Students,\nstaff, and\nfaculty" as cc
+}
+
+frame "Big Box IdP" {
+    component "BB" as bbidp << Istereo >> 
+}
+
+lrslms -[oidcBracketArrow]-> bbidp : OIDC;\nJWKS
+bbidp <-[oidcBracketArrow]- lrsoauth : OIDC;\nJWKS
+lrsportal -[oidcBracketArrow]-> bbidp : OIDC;\nJWKS
+lrsportal -[ccgBracketArrow]> lrsoauth : <color pDKGreen>CCG\n(read@icj)
+
+lrsportal -[oauthBracketArrow]> intro: <color pOrange>OAuth\n<color pOrange>(read@icj)
+lrsoauth <-[jwksBracketArrow]- intro : <color pBlue>JWKS
+
+@enduml

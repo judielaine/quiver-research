@@ -1,0 +1,92 @@
+/'
+# universe02-deploy-EasternU
+Created: 2025/03/19 17:11:14
+Last modified: 2025/03/27 18:03:03
+'/
+@startuml universe02-deploy-EasternU
+!include resources/style.puml
+
+title Eastern University joining federation
+
+/'
+frame "Craft News and Research" {
+   component "Journal service" {
+      file "Intro to crafts" as intro << Pstereo >>
+   }
+}
+
+frame "Learning R Us" {
+   component "LMS" as lms  << Rstereo >>
+}
+'/
+frame "Eastern University" {
+   component "EU" as euidp << Istereo >> 
+   /'
+   component "EU" as euoauth << Astereo >>
+   'component "EU"  as euvci << Cstereo >>
+   component "EU portal" as euportal << Mstereo >>
+   agent "EU mobile" as eumobile << Mstereo >>
+   component "Lathe" as lathe << Pstereo >>
+   '/
+
+   /'Styled sterotypes are not supported for container components.'/
+   
+   component "EU fed4rs" as eufed4rs  << "Multi Role" >> uniMockStyle  {
+      component "Admin Site" as eumetaadmin << Rstereo >> uniStyle 
+      interface "GET\n/.well-known\n/openid-\nconfiguration" as eufedwk oidfStyle
+
+      database  eumeta_db  uniStyle [
+        Metadata datastore
+        --
+        organization table
+        entity table: entity_id, jwks
+        TA table: entity_id, jwks
+      ]
+      collections "Metadata policies" as eumeta_policies uniStyle
+
+      storage "Keystore" as eumeta_keys uniStyle
+      component "EU Intermediary" << "Federation" >> {
+         'interface "/.key-history\nGET" as eukh  oidfStyle 
+         'interface "/auto-admin\nGET, POST" as eumetaauto uniStyle
+         interface "GET /fetch" as eufetch  oidfStyle
+         interface "GET /list" as eufedlist oidfStyle
+         'interface "/resolve\nGET, POST" as euresolve oidfStyle
+
+      }
+      process "Entity Configuration Monitor" as eumonitor uniStyle
+
+      eumetaadmin -[bold]-* eumeta_db
+      eumetaadmin -[bold]-* eumeta_keys
+      eumetaadmin -[bold]-* eumeta_policies
+      eumonitor -[bold]-* eumeta_db
+      eufetch -[dashed]-0 eumeta_db
+      eufetch -[dashed]-0 eumeta_keys
+      eufetch -[dashed]-0 eumeta_policies
+      eufedlist -[dashed]-0 eumeta_db
+      eufedwk -[dashed]-0 eumeta_db
+      eufedwk -[dashed]-0 eumeta_keys
+      eufedwk -[dashed]-0 eumeta_policies
+
+}
+
+eumetaadmin -[oidcBracketArrow]> euidp : OIDC;\nJWKS
+/'
+lms -[oidcBracketArrow]> euidp : OIDC;\nJWKS
+euidp <-[oidcBracketArrow]- euoauth : OIDC;\nJWKS
+euportal -[oidcBracketArrow]> euidp : OIDC;\nJWKS
+euportal -[ccgBracketArrow]> euoauth : CCG\n(read@icj)
+euportal -[acgBracketArrow]> euoauth : ACG\n(lathe)
+euidp <-[oidcBracketArrow]- eumobile : OIDC;\nJWKS
+euoauth <-[acgBracketArrow] eumobile : ACG\n(lathe; read@icj)
+
+euportal -[oauthBracketArrow]-> lathe : OAuth\n(lathe)
+eumobile -[oauthBracketArrow]-> lathe : OAuth\n(lathe)
+euoauth <-[jwksBracketArrow]- lathe : JWKS
+
+euportal -[oauthBracketArrow]> intro: OAuth\n(read@icj)
+eumobile -[oauthBracketArrow]> intro: OAuth\n(read@icj)
+euoauth <-[jwksBracketArrow]- intro : JWKS
+'/
+
+
+@enduml
