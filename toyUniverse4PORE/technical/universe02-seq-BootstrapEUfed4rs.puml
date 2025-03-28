@@ -1,7 +1,7 @@
 /'
 # universe02-seq-BootstrapEUfed4rs
 Created: 2025/03/24 14:58:19
-Last modified: 2025/03/27 18:31:40
+Last modified: 2025/03/28 15:12:42
 '/
 
 @startuml universe02-seq-BootstrapEUfed4rs.01
@@ -124,6 +124,7 @@ eumetaadmin -> euStaff: Admin interface
 
 note over euStaff, eumetaadmin
     Act as OIDFv42 Intermediary? Yes
+    Configure trust anchor:
         * federation's Entity Identifier: "https://bluesky.org"
             will use as <color pDKRed>authority_hints</color>
         * <color pDKRed>federation public key in a file bluesky.jwks</color>
@@ -163,6 +164,7 @@ bsmetaadmin -[seqReallyOther]->o bsmetaadmin
 bsmetaadmin o-[seqReallyOther]->o eumetaadmin: https://eu.edu/fed4rs/fed4rs/.well-known/openid-configuration
 eumetaadmin o-[seqReallyOther]->o bsmetaadmin
 bsmetaadmin o-[seqReallyOther]->o bsmetaadmin: confirm keys match
+
 
 
 @enduml

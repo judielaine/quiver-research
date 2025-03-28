@@ -1,0 +1,117 @@
+/'
+# universe02-seq-CCidp
+Created: 2025/03/28 10:19:16
+Last modified: 2025/03/28 17:30:12
+'/
+
+@startuml universe02-seq-BootstrapEUfed4rs.01
+!include resources/style.puml
+
+title Initial config of fed4rs service at EU
+
+actor "CC staff" as ccStaff
+
+participant "bb.com/oidc/\nsome-UUID" as bbidp << Istereo >> 
+
+box "Blue Sky Federation"  pPaleGreen
+    participant "Admin Site" as bsmetaadmin << Rstereo >>
+end box
+
+
+== Join federation and configure new organization ==
+
+note over ccStaff,bsmetaadmin
+Registration proceeds as with Eastern University, in particular:
+    * will the member operate an provider?  Yes
+        * establish equivalent of shibmd:Scope  
+            * <color pBlue>bluesky_shibmd_scope = "cc.edu"</color>
+
+At the end of the process the federation provides the following:
+    * <color pDKRed>federation's entity identifier</color>
+    * <color pDKRed>federation public key as a jwks file </color>(see Section 11.3 (Redundant Retrieval of Trust Anchor Keys)
+    * some way to access the administration UI
+end note
+
+== Configure Big Box IdP for federation membership ==
+
+ccStaff <- bbidp : Federation admin UI
+ccStaff -> bbidp : Configure trust anchor
+note over ccStaff,bbidp
+    * <color pDKRed>federation's entity identifier</color>
+    * <color pDKRed>federation public key 
+        as a jwks file
+end note
+bbidp  -[seqReallyOther]->o bbidp: register TS jwks\nand kick off\nmonitoring 
+bsmetaadmin o<-[seqReallyOther]-o bbidp: https://bluesky.org/.well-known\n/openid-configuration
+bbidp o<-[seqReallyOther]-o bsmetaadmin
+bbidp o-[seqReallyOther]->o bbidp: confirm keys match
+ccStaff <- bbidp : Entity config admin UI
+ccStaff -> bbidp : Configure Entity Configuration
+note over ccStaff,bbidp
+    The IdP provides the options to configure
+    * one or more JWK Set representations:
+        Blue Sky requires <color pBlue>signed_jwks_uri</color>
+    * a support URL (for the <color pDKRed>contacts</color> claim):
+        https://www.cc.edu/YourCampusID 
+    * a long list of protocol options and the 
+        admin just accepts the defaults, forgetting
+        to double check Blue Sky requirements.
+end note
+ccStaff <- bbidp : Subject ID admin UI
+ccStaff -> bbidp : Configure Subject Identifier
+note over ccStaff,bbidp
+    * map attribute to the uniqueID of
+      General Purpose Subject Identifier
+    * <color pBlue>shibmd_scope = "cc.edu" 
+    Turn on Pairwise Subject Identifier
+      support
+end note
+bbidp  -[seqReallyOther]->o bbidp: generate first\nentity statement 
+ccStaff <- bbidp : <color pDKRed>jwks file, entity ID =\n<color pDKRed>https://bb.com/oidc/some-UUID
+
+== Register Big Box IdP with federation ==
+
+ccStaff <-> bsmetaadmin : /fed4rs/login, per initial agreement
+activate bsmetaadmin
+bsmetaadmin -> ccStaff: Admin interface
+note over ccStaff, bsmetaadmin
+    * <color pDKRed>OP entity ID "https://bb.com/oidc/some-UUID"</color>
+    * <color pDKRed>OP public key in a file bbop4cc.jwks</color>
+end note
+ccStaff -> bsmetaadmin: submit intermediary config
+bsmetaadmin -> ccStaff: return entity metadata policy details
+bsmetaadmin -> ccStaff: <color pRed>**ALERT**</color>
+note over ccStaff, bsmetaadmin
+    <color pRed>**ALERT**</color>
+    Wait for confirmation of your OP entity ID
+end note
+bsmetaadmin ->]: Message to Blue Sky staff
+...
+note over ccStaff, bsmetaadmin
+    Blue Sky Staff contact a support person at Big Box who is 
+    allowed to confirm the entity ID and the customer identity.
+end note
+bsmetaadmin <-]: staff confirm entity ID;\nfirst process "Entity\nConfiguration Monitor" 
+
+bsmetaadmin -[seqReallyOther]->o bsmetaadmin
+bsmetaadmin o-[seqReallyOther]->o bbidp: https://bb.com/oidc/some-UUID/\n.well-known/openid-configuration
+bsmetaadmin o<-[seqReallyOther]-o bbidp
+bsmetaadmin o-[seqReallyOther]->o bsmetaadmin: confirm keys match
+bsmetaadmin o-[seqReallyOther]->o bsmetaadmin: validate metadata\nfind error\ndeactivate
+bsmetaadmin -> ccStaff: <color pRed>**ALERT**</color>
+note over ccStaff, bsmetaadmin
+    <color pRed>**ALERT**</color>
+    Missing correct supported cryptographic algorithms : ShinyPostQ
+    Supporting disallowed algorithms: RS256
+end note
+ccStaff <-> bbidp : Entity config admin UI
+ccStaff -> bbidp : Configure Entity Configuration
+note over ccStaff,bbidp
+    Change cryptographic algorithms
+end note
+bbidp  -[seqReallyOther]->o bbidp: regenerate\nentity statement 
+ccStaff -> bsmetaadmin: test Entity Configuration again
+bsmetaadmin o-[seqReallyOther]->o bbidp: https://bb.com/oidc/some-UUID/\n.well-known/openid-configuration
+bsmetaadmin o<-[seqReallyOther]-o bbidp
+bsmetaadmin o-[seqReallyOther]->o bsmetaadmin: validate metadata\nno error\nactivate
+@enduml
